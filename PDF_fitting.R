@@ -2,6 +2,8 @@
 # reef by individual sharks. The expectation is that the parameters, or the
 # distributions themselves will differ among different species of shark.
 
+#This script was written by Juan Sebastián Vargas in 2017
+
 library(MASS)
 
 # Load data frames
