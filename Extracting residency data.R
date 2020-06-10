@@ -46,7 +46,7 @@ inds.cl <- lapply(inds.cl, function(x){
       x$move.type <- type
       return(x)
 })
-
+ 
 inds.ca <- lapply(inds.ca, function(x){
       type <- foreach(i = 1:(nrow(x)-1), .combine = c) %do% {
             if(x$reef[i] == 'None'){
