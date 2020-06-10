@@ -26,7 +26,7 @@ for k,entr in enumerate(ent):
    rf=r1[6]; num=1; tag=r1[0]; numtib=0; frec=int(r1[7])
    while(True):
      r2 = f.readline()[:-1].split(',')
-     if len(r2[0])==0:
+     if len(r2[0])==0: 
         r2=n; pondt(r2,rf,frec,num); break
      if r2[6]!=rf:
         pondt(r2,rf,frec,num)
