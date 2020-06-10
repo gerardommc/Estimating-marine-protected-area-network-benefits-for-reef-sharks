@@ -26,7 +26,7 @@ for(i in 0:500){
   if(i <=tM){cw<-k/(1-exp(-k*(i-t0)))}
   else{cw<-k/(a0+a1*(i-tM)+a2*(i-tM)^2)}
   CW<-cbind(CW,cw)
-}
+} 
 
 Chen.Want<-as.vector(CW)
 Charnov <- k*(Lt/Linf)^-1.5
