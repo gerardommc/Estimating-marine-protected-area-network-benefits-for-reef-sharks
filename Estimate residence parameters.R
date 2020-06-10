@@ -26,7 +26,7 @@ ca.back.df <- data.frame(rbindlist(ca.back))
 ca.back.df$event <- 1
 
 ca.mov.times <- with(ca.mov.df, Surv(acum, event, type = "right"))
-ca.leave.times <- with(ca.leave.df, Surv(acum, event, type = "right"))
+ca.leave.times <- with(ca.leave.df, Surv(acum, event, type = "right")) 
 ca.back.times <- with(ca.back.df, Surv(acum, event, type = "right"))
 
 #Doing the regression
