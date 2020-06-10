@@ -6,4 +6,4 @@ This repository contains all the code for analysing the movements of individuals
   1.2. Parameters controling the probability of travelling to another reef in the system, going out of the reef network system or returning to the reef network.
 2. Model of shark movement among protected and unprotected reefs
 3. Simulation scripts of the model
-4. Data (passice acoustic telemtry)
+4. Data (passive acoustic telemetry)
