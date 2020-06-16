@@ -4,6 +4,8 @@ source('out.R')
 source('protected.R')
 source('unprotected.R')
 
+rho <- read.csv("C-ambly-residence-probs.csv")
+
 set.seed(1234)
 
 Nreefs <- 30
@@ -15,19 +17,25 @@ reefDist <- as.matrix(dist(reefLoc))
 
 reefSuitability <- rbeta(Nreefs, 0.03, 0.03)
 
-initialPos <- sample(1:Nreefs, 1, replace = T)
-
-protection = seq(0, 1, len = 10)
-fishing = seq(0.1, 10, len = 10)
+protection = seq(0, 1, len = 11)
+fishing = seq(0, 10, len = 11)
 
 scenarios <- expand.grid(protection = protection, fishing = fishing)
 
+rho.m <- na.omit(subset(rho, type == "move"))
+rho.l <- na.omit(subset(rho, type == "leave"))
+rho.b <- na.omit(subset(rho, type == "back"))
+
+move.fun <- with(rho.m, approxfun(x = time, y = rho, method = "linear"))
+leave.fun <- with(rho.l, approxfun(x = time, y = rho, method = "linear"))
+back.fun <- with(rho.b, approxfun(x = time, y = rho, method = "linear"))
+
+freq.move <- 0.11
+freq.leave <- 0.89
+
+
 library(doParallel)
 registerDoParallel(cores = 8)
-
-move <- read.csv('Ca-move-samples.csv')
-reef <- read.csv('Ca-back-samples.csv')
-out <- read.csv('Ca-leave-samples.csv')
 
 shark.population.1 <- foreach(i = 1:nrow(scenarios)) %dopar% {
       
@@ -39,20 +47,18 @@ shark.population.1 <- foreach(i = 1:nrow(scenarios)) %dopar% {
       s <- foreach(j = 1:1000) %do% {
             
             initialPos <- sample(1:Nreefs, 1, replace = T)
-            
-            id.move <- sample(1:3000, 1)
-            id.reef <- sample(1:3000, 1)
-            id.out <- sample(1:3000, 1)
-            
+
             sharkStatus <- reefStatus[initialPos]  
             
             s1 <- shark(list(
                   currentReef = initialPos, reefX = reefX, reefY = reefY, 
                   reefStatus = reefStatus, protReefs = protReefs, reefSuitability = reefSuitability,#reef attributes
-                  a.move = move$a[id.move], b.move = move$b[id.move], c.move = NA,
-                  a.reef = reef$a[id.reef], b.reef = reef$b[id.reef], c.reef = reef$c[id.reef],
-                  a.out = out$a[id.out], b.out = out$b[id.out], c.out = NA,
-                  DistShape = 4.31353, DistRate = 0.3077521, ###Modificar estos parámetros de acuerdo con la especie
+                       move.fun = move.fun,
+                       leave.fun = leave.fun,
+                       back.fun = back.fun,
+                  freq.move = freq.move,
+                  freq.leave = freq.leave,
+                  DistShape = 4.31353, DistRate = 0.3077521,
                   fishRate = 0.000359905, fishWeight = scenarios$fishing[i],#status attributes
                   deathRate = 1/(6 * 365),
                   sharkStatus = sharkStatus,
@@ -70,7 +76,7 @@ shark.population.1 <- foreach(i = 1:nrow(scenarios)) %dopar% {
       return(s)
 }
 
-saveRDS(shark.population.1, "C-a-popn-1.rds")
+saveRDS(shark.population.1, "C-ambly-popn-1.rds")
 
 sim.1 <- foreach(i = seq_along(shark.population.1)) %dopar% {
       scen <- foreach(j = seq_along(shark.population.1[[i]]), .combine = rbind) %do% {
@@ -87,14 +93,12 @@ sim.1 <- foreach(i = seq_along(shark.population.1)) %dopar% {
       }
 }
 
-saveRDS(sim.1, "C-a-sim-popn-1.rds")
+saveRDS(sim.1, "C-ambly-sim-popn-1.rds")
 
 rm(shark.population.1)
 rm(sim.1)
 
 gc(reset = T)
-
-#protecting less suitable reefs
 
 shark.population.2 <- foreach(i = 1:nrow(scenarios)) %dopar% {
       
@@ -109,17 +113,19 @@ shark.population.2 <- foreach(i = 1:nrow(scenarios)) %dopar% {
             initialPos <- sample(1:Nreefs, 1, replace = T)
             
             id.move <- sample(1:3000, 1)
-            id.reef <- sample(1:3000, 1)
-            id.out <- sample(1:3000, 1)
+            id.leave <- sample(1:3000, 1)
+            id.back <- sample(1:3000, 1)
             
             sharkStatus <- reefStatus[initialPos]  
             
             s1 <- shark(list(
                   currentReef = initialPos, reefX = reefX, reefY = reefY, 
                   reefStatus = reefStatus, protReefs = protReefs, reefSuitability = reefSuitability,#reef attributes
-                  a.move = move$a[id.move], b.move = move$b[id.move], c.move = NA,
-                  a.reef = reef$a[id.reef], b.reef = reef$b[id.reef], c.reef = reef$c[id.reef],
-                  a.out = out$a[id.out], b.out = out$b[id.out], c.out = NA,
+                  move.fun = move.fun,
+                  leave.fun = leave.fun,
+                  back.fun = back.fun,
+                  freq.move = freq.move,
+                  freq.leave = freq.leave,
                   DistShape = 4.31353, DistRate = 0.3077521,
                   fishRate = 0.000359905, fishWeight = scenarios$fishing[i],#status attributes
                   deathRate = 1/(6*365),
@@ -138,7 +144,7 @@ shark.population.2 <- foreach(i = 1:nrow(scenarios)) %dopar% {
       return(s)
 }
 
-saveRDS(shark.population.2, "C-a-popn-2.rds")
+saveRDS(shark.population.2, "C-ambly-popn-2.rds")
 
 sim.2 <- foreach(i = seq_along(shark.population.2)) %dopar% {
       scen <- foreach(j = seq_along(shark.population.2[[i]]), .combine = rbind) %do% {
@@ -155,5 +161,5 @@ sim.2 <- foreach(i = seq_along(shark.population.2)) %dopar% {
       }
 }
 
-saveRDS(sim.2, "C-a-sim-popn-2.rds")
+saveRDS(sim.2, "C-ambly-sim-popn-2.rds")
 
