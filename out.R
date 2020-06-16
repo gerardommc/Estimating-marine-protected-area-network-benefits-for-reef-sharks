@@ -5,7 +5,7 @@ simulate.out = function(x){
       
       p.back = back.fun(toffReef)
       p.back = ifelse(is.infinite(p.back), 0, p.back)
-      pback = ifelse(is.na(p.back), runif(1), p.back)      
+      p.back = ifelse(is.na(p.back), runif(1), p.back)      
 
       p.stay.out = 1 - p.back
       
