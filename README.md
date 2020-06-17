@@ -8,3 +8,5 @@ This repository contains all the code for analysing the movements of individuals
 2. Model of shark movement among protected and unprotected reefs
 3. Simulation scripts of the model
 4. Data (passive acoustic telemetry)
+
+*This repository is archived in Zenodo 10.5281/zenodo.3898926*
