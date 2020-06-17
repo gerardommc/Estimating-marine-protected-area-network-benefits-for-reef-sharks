@@ -1,4 +1,4 @@
-# Estimating benefits of marine protected area networks for reef sharks
+# Estimating marine protected area network benefits for reef sharks
 This repository contains all the code for analysing the movements of individuals of three shark species tagged with passive acoustic monitors, and the code to simulate their movement in a marine protected area network. The scripts are organised as follows:
 
 1. Analysis of species' movements to estimate model parameters:
