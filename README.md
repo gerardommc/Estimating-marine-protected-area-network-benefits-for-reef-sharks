@@ -9,4 +9,4 @@ This repository contains all the code for analysing the movements of individuals
 3. Simulation scripts of the model
 4. Data (passive acoustic telemetry)
 
-*This repository is archived in Zenodo 10.5281/zenodo.3898926*
+*This repository is archived in Zenodo DOI:10.5281/zenodo.3898926*
