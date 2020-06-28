@@ -1,6 +1,7 @@
 ######
 # tiburones1.py
 # 11 de septiembre de 2017
+# Written by Eliodoro Valdez-Torices
 ######
 
 ent=('2017-09-10_BUL resid by reef_freq.csv',
